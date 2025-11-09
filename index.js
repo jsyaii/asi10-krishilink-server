@@ -9,7 +9,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const uri = "mongodb+srv://krishiUser:DV9UBUg2tpbFebvX@cluster0.dsizbq5.mongodb.net/?appName=Cluster0";
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.dsizbq5.mongodb.net/?appName=Cluster0`;
 
 const client = new MongoClient(uri, {
   serverApi: {
