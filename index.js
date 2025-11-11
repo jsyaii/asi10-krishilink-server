@@ -133,7 +133,31 @@ app.get('/crops/:id', async (req, res) => {
     });
 
     // Submit interest
-    
+    app.post('/crops/:id/interest', async (req, res) => {
+      const { id } = req.params;
+      const interest = req.body;
+      interest._id = new ObjectId(); // Unique ID for interest
+
+      if (!ObjectId.isValid(id) || id.length !== 24) {
+        return res.status(400).json({ message: "Invalid crop ID" });
+      }
+
+      try {
+        const result = await cropsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $push: { interests: interest } }
+        );
+
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ message: 'Crop not found' });
+        }
+
+        res.json({ success: true, interest });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+    });
     // Search crops
    app.get('/search-crops', async (req, res) => {
       try {
