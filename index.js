@@ -35,7 +35,11 @@ async function run() {
     const usersCollection = db.collection("users");
 
     // Latest crops
-   
+   app.get('/latest-crops', async (req, res) => {
+      const cursor = cropsCollection.find().sort({ created_at: -1 }).limit(6);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Add Crop
     app.post('/crops', async (req, res) => {
