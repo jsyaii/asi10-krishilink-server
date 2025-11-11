@@ -86,10 +86,26 @@ app.get('/crops/:id', async (req, res) => {
   }
 });
 
+     // Get crop by ID
+    app.get('/crops/:id', async (req, res) => {
+      const { id } = req.params;
 
+      let query;
+      if (ObjectId.isValid(id) && id.length === 24) {
+        query = { _id: new ObjectId(id) };
+      } else {
+        return res.status(400).json({ message: 'Invalid crop ID' });
+      }
 
-    // Get crop by ID
-    
+      try {
+        const crop = await cropsCollection.findOne(query);
+        if (!crop) return res.status(404).json({ message: 'Crop not found' });
+        res.json(crop);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+    });
 
     // Update crop
     app.patch('/crops/:id', async (req, res) => {
