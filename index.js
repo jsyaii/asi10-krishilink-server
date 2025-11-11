@@ -135,7 +135,17 @@ app.get('/crops/:id', async (req, res) => {
     // Submit interest
     
     // Search crops
-   
+   app.get('/search-crops', async (req, res) => {
+      try {
+        const search = req.query.q || "";
+        const query = { name: { $regex: search, $options: "i" } };
+        const result = await cropsCollection.find(query).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error searching crops:", error);
+        res.status(500).send({ message: "Search failed" });
+      }
+    });
 
     // Delete crop
     app.delete('/crops/:id', async (req, res) => {
