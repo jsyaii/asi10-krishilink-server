@@ -32,8 +32,7 @@ async function run() {
 
     const db = client.db("krishilink_db");
     const cropsCollection = db.collection("crops");
-    const interestsCollection = db.collection("interests");
-    const usersCollection = db.collection("users");
+    
 
 //     // ---------------- INTEREST ROUTES ----------------
 // // POST /interests
@@ -430,7 +429,7 @@ app.patch('/interests/:id', async (req, res) => {
       res.send(result);
     });
 
-    // ⚠️ Duplicate Add Crop route (same as above /crops POST)
+    
     app.post("/crops", async (req, res) => {
       try {
         const newCrop = req.body;
@@ -489,7 +488,7 @@ app.patch('/interests/:id', async (req, res) => {
   const { id } = req.params;
   let query;
 
-  // Handle both short string IDs and ObjectIds
+  
   if (ObjectId.isValid(id) && id.length === 24) {
     query = { _id: new ObjectId(id) };
   } else {
@@ -509,7 +508,7 @@ app.patch('/interests/:id', async (req, res) => {
 });
 
 
-// ✅ Add interest to crop (supports both string and ObjectId IDs)
+
 app.post("/crops/:id/interest", async (req, res) => {
   const { id } = req.params;
   const interest = req.body;
@@ -613,7 +612,7 @@ app.post("/crops/:id/interest", async (req, res) => {
 });
 
 
-    // ⚠️ Duplicate /crops/:id/interest route again
+    
     app.post("/crops/:id/interest", async (req, res) => {
       const { id } = req.params;
       const interest = req.body;
@@ -674,7 +673,7 @@ app.post("/crops/:id/interest", async (req, res) => {
       }
     });
 
-    // await db.command({ ping: 1 });
+    
     console.log("✅ Pinged MongoDB successfully!");
   } catch (err) {
     console.error("❌ Error connecting to MongoDB:", err);
@@ -692,22 +691,22 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: '*', // or specify your frontend URL
+    origin: '*', 
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   },
 });
 
-// When a client connects
+
 io.on('connection', (socket) => {
   console.log('🟢 A user connected:', socket.id);
 
-  // Example: listen for a custom event
+ 
   socket.on('joinRoom', (roomId) => {
     socket.join(roomId);
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
-  // Example: broadcast updates (optional for your interests system)
+  
   socket.on('interestUpdated', (data) => {
     io.emit('refreshInterests', data);
   });
@@ -717,7 +716,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// Run the server
+
 server.listen(port, () => {
   console.log(`🚀 KrishiLink Server with Socket.IO running on port ${port}`);
 });
